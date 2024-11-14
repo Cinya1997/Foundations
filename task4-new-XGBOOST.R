@@ -35,6 +35,19 @@ plot(data$previous, data$y_binary,
 # add a regression line
 abline(lm(data$y_binary ~ data$previous), col="blue")
 
+# compute the average historical subscriptions for each current subscription status and plot bar chart
+library(dplyr)
+avg_subscriptions <- data %>%
+  group_by(y_binary) %>%
+  summarise(mean_previous = mean(previous))
+
+barplot(avg_subscriptions$mean_previous,
+        names.arg = c("No Subscription", "Subscription"),
+        col = c("orange", "lightblue"),
+        main="Average Historical Subscriptions by Current Subscription Status",
+        xlab="Current Subscription (y_binary)",
+        ylab="Average Historical Subscriptions (previous)")
+
 # divide the data into training and testing
 set.seed(123)
 trainIndex <- createDataPartition(data$y_binary, p = 0.8, list = FALSE)
